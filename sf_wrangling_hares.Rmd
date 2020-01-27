@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 # Load Required Packages
 library(tidyverse)
 library(janitor)
@@ -20,10 +20,9 @@ library(ggplot2)
 ```
 
 Clean the Data
-```{r}
+```{r, warning = FALSE, message = FALSE}
 # Read in Data
 snowshoe_df <- read_csv("showshoe_lter.csv")
-snowshoe_df
 
 # Select Sex, Weight, Hindfoot Ratio, and Grid 
 # Filter Information from Grid "bonmat", as Adequate Mtadata for the Site is Unavailable
@@ -47,13 +46,12 @@ snowshoe_clean_df <- snowshoe_df %>%
         -grid_l) %>% 
   na.omit()
 
-
 snowshoe_clean_df
 ```
 
 
 Summarize the Data
-```{r}
+```{r, warning = FALSE, message = FALSE}
 # Summarize the 
 
 # Create a Summary Table of Mean Weight and Hind Foot Ratio for Each Sex
@@ -64,22 +62,32 @@ mean_table <- snowshoe_clean_df %>%
             min_wt  = round(min(weight), 1),
             med_wt = round(median(weight), 1))
 
-names(mean_table) <- c("Sex", "Mean Weight (g)", "Maximum Weight (g)", "Minimum Weight (g)", "Median Weight (g)") 
-
-mean_table 
+names(mean_table) <- c("Sex", "Mean (g)", "Maximum (g)", "Minimum (g)", "Median (g)") 
 
 summary_table <- kable(mean_table) %>% 
   kable_styling(bootstrap_options = "striped", 
                 full_width = FALSE) %>% 
   add_header_above(c("Adult Snowshoe Hare Weights in the Bonanza Creek Experimental Forest" = 5))
+
 summary_table
 ```
 
 Visualize the Data
 ```{r}
 # Create a Graph of the Data
-snowshoe_graph <- ggplot(snowshoe_clean_df) +
-  geom_point()
+labels <- c(F = "Female", M = "Male")
+
+
+
+snowshoe_graph <- ggplot(snowshoe_clean_df, aes(x = snowshoe_clean_df$weight, color = snowshoe_clean_df$sex_l, 
+                                                fill = snowshoe_clean_df$sex_l)) +
+  geom_histogram(binwidth = 100, alpha = 0.5) + 
+  facet_wrap(~sex_l, labeller=labeller(sex_l = labels)) +
+  scale_x_continuous(breaks = seq(500, 2500, by = 250)) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(title="Adult Snowshoe Hare Weight Distribution (1999-2012)",x=" Weight (g)", y = "Number of Individuals", legend.title= "Sex")
+snowshoe_graph
                          
 ```
 

@@ -379,151 +379,61 @@ summary {
 
 
 <pre class="r"><code># Load Required Packages
-library(tidyverse)</code></pre>
-<pre><code>## Warning: package 'tidyverse' was built under R version 3.5.2</code></pre>
-<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
-## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
-## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## Warning: package 'ggplot2' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'tibble' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'tidyr' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'purrr' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'dplyr' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'stringr' was built under R version 3.5.2</code></pre>
-<pre><code>## Warning: package 'forcats' was built under R version 3.5.2</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(janitor)</code></pre>
-<pre><code>## Warning: package 'janitor' was built under R version 3.5.2</code></pre>
-<pre><code>## 
-## Attaching package: 'janitor'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     chisq.test, fisher.test</code></pre>
-<pre class="r"><code>library(kableExtra)</code></pre>
-<pre><code>## Warning: package 'kableExtra' was built under R version 3.5.2</code></pre>
-<pre><code>## 
-## Attaching package: 'kableExtra'</code></pre>
-<pre><code>## The following object is masked from 'package:dplyr':
-## 
-##     group_rows</code></pre>
-<pre class="r"><code>library(knitr)</code></pre>
-<pre><code>## Warning: package 'knitr' was built under R version 3.5.2</code></pre>
-<pre class="r"><code>library(ggplot2)</code></pre>
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(knitr)
+library(ggplot2)</code></pre>
 <p>Clean the Data</p>
 <pre class="r"><code># Read in Data
-snowshoe_df &lt;- read_csv(&quot;showshoe_lter.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   date = col_character(),
-##   time = col_logical(),
-##   grid = col_character(),
-##   trap = col_character(),
-##   l_ear = col_character(),
-##   r_ear = col_double(),
-##   sex = col_character(),
-##   age = col_character(),
-##   weight = col_double(),
-##   hindft = col_double(),
-##   notes = col_character(),
-##   b_key = col_double(),
-##   session_id = col_double(),
-##   study = col_character()
-## )</code></pre>
-<pre><code>## Warning: 1023 parsing failures.
-##  row   col expected actual                file
-## 1485 r_ear a double  a3004 'showshoe_lter.csv'
-## 1490 r_ear a double  a3002 'showshoe_lter.csv'
-## 1495 r_ear a double  a3006 'showshoe_lter.csv'
-## 1496 r_ear a double  a3008 'showshoe_lter.csv'
-## 1506 r_ear a double  a3002 'showshoe_lter.csv'
-## .... ..... ........ ...... ...................
-## See problems(...) for more details.</code></pre>
-<pre class="r"><code>snowshoe_df</code></pre>
-<pre><code>## # A tibble: 3,380 x 14
-##    date  time  grid  trap  l_ear r_ear sex   age   weight hindft notes b_key
-##    &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;
-##  1 11/2… NA    bonr… 1A    414D…    NA &lt;NA&gt;  &lt;NA&gt;    1370    160 &lt;NA&gt;    917
-##  2 11/2… NA    bonr… 2C    414D…    NA M     &lt;NA&gt;    1430     NA &lt;NA&gt;    936
-##  3 11/2… NA    bonr… 2D    414D…    NA M     &lt;NA&gt;    1430     NA &lt;NA&gt;    921
-##  4 11/2… NA    bonr… 2E    414D…    NA &lt;NA&gt;  &lt;NA&gt;    1490    135 &lt;NA&gt;    931
-##  5 11/2… NA    bonr… 3B    414D…    NA &lt;NA&gt;  &lt;NA&gt;    1710    150 &lt;NA&gt;    933
-##  6 11/2… NA    bonr… 3D    414D…    NA F     &lt;NA&gt;    1890    145 &lt;NA&gt;    926
-##  7 11/2… NA    bonr… 4A    414D…    NA &lt;NA&gt;  &lt;NA&gt;    2170    140 &lt;NA&gt;    920
-##  8 11/2… NA    bonr… 4B    414D…    NA &lt;NA&gt;  &lt;NA&gt;    2170     NA &lt;NA&gt;    923
-##  9 11/2… NA    bonr… 4C    414D…    NA M     &lt;NA&gt;    1510    134 &lt;NA&gt;    927
-## 10 11/2… NA    bonr… 4E    414D…    NA M     &lt;NA&gt;    1590     NA &lt;NA&gt;    928
-## # … with 3,370 more rows, and 2 more variables: session_id &lt;dbl&gt;, study &lt;chr&gt;</code></pre>
-<pre class="r"><code># Select Sex, Weight, Hindfoot Ratio, and Grid 
+snowshoe_df &lt;- read_csv(&quot;showshoe_lter.csv&quot;)
+
+# Select Sex, Weight, Hindfoot Ratio, and Grid 
 # Filter Information from Grid &quot;bonmat&quot;, as Adequate Mtadata for the Site is Unavailable
 # Remove Rows Containing Questionable Sex
 # Convert Grid and Sex Data to Lowercase
 # Remove NAs from the Dataframe
 snowshoe_clean_df &lt;- snowshoe_df %&gt;% 
-  select(grid, sex, weight, hindft) %&gt;% 
+  select(grid, sex, weight, age) %&gt;% 
   filter(grid != &quot;bonmat&quot;,
          sex != &quot;?&quot;,
          sex != &quot;M?&quot;,
          sex != &quot;F?&quot;,
          sex != &quot;m?&quot;,
          sex != &quot;f?&quot;,
-         sex != &quot;pf&quot;) %&gt;%
+         sex != &quot;pf&quot;,
+         age == &quot;A&quot;) %&gt;%
     mutate(grid_l = str_to_lower(grid),
            sex_l = str_to_upper(sex)) %&gt;% 
   select(-grid,
         -sex,
         -grid_l) %&gt;% 
-  na.omit()
-
-
-snowshoe_clean_df</code></pre>
-<pre><code>## # A tibble: 1,473 x 3
-##    weight hindft sex_l
-##     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
-##  1   1890    145 F    
-##  2   1510    134 M    
-##  3   1730    135 F    
-##  4   1670    145 M    
-##  5   1650    145 F    
-##  6   1830    125 F    
-##  7   1770    145 F    
-##  8   1640    137 F    
-##  9   1750    130 M    
-## 10   1690    146 M    
-## # … with 1,463 more rows</code></pre>
+  na.omit()</code></pre>
 <p>Summarize the Data</p>
 <pre class="r"><code># Summarize the 
 
 # Create a Summary Table of Mean Weight and Hind Foot Ratio for Each Sex
 mean_table &lt;- snowshoe_clean_df %&gt;% 
   group_by(sex_l) %&gt;% 
-  summarise(mean_wt = mean(weight),
-            mean_hf = mean(hindft))
+  summarise(mean_wt = round(mean(weight), 0),
+            max_wt = round(max(weight), 1),
+            min_wt  = round(min(weight), 1),
+            med_wt = round(median(weight), 1))
 
-names(mean_table) &lt;- c(&quot;Sex&quot;, &quot;Mean Weight&quot;, &quot;Hindfoot Ratio&quot;) 
+names(mean_table) &lt;- c(&quot;Sex&quot;, &quot;Mean (g)&quot;, &quot;Maximum (g)&quot;, &quot;Minimum (g)&quot;, &quot;Median (g)&quot;) 
 
-mean_table </code></pre>
-<pre><code>## # A tibble: 2 x 3
-##   Sex   `Mean Weight` `Hindfoot Ratio`
-##   &lt;chr&gt;         &lt;dbl&gt;            &lt;dbl&gt;
-## 1 F             1352.             131.
-## 2 M             1318.             134.</code></pre>
-<pre class="r"><code>summary_table &lt;- kable(mean_table) %&gt;% 
+summary_table &lt;- kable(mean_table) %&gt;% 
   kable_styling(bootstrap_options = &quot;striped&quot;, 
                 full_width = FALSE) %&gt;% 
-  add_header_above(c(&quot;&quot;, &quot;Average Snowshoe Hare Weight and Hind Foot Ratio in the Bonanza Creek Experimental Forest&quot; = 2))
+  add_header_above(c(&quot;Adult Snowshoe Hare Weights in the Bonanza Creek Experimental Forest&quot; = 5))
+
 summary_table</code></pre>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="border-bottom:hidden" colspan="1">
-</th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-Average Snowshoe Hare Weight and Hind Foot Ratio in the Bonanza Creek Experimental Forest
+Adult Snowshoe Hare Weights in the Bonanza Creek Experimental Forest
 </div>
 </th>
 </tr>
@@ -532,10 +442,16 @@ Average Snowshoe Hare Weight and Hind Foot Ratio in the Bonanza Creek Experiment
 Sex
 </th>
 <th style="text-align:right;">
-Mean Weight
+Mean (g)
 </th>
 <th style="text-align:right;">
-Hindfoot Ratio
+Maximum (g)
+</th>
+<th style="text-align:right;">
+Minimum (g)
+</th>
+<th style="text-align:right;">
+Median (g)
 </th>
 </tr>
 </thead>
@@ -545,10 +461,16 @@ Hindfoot Ratio
 F
 </td>
 <td style="text-align:right;">
-1351.986
+1525
 </td>
 <td style="text-align:right;">
-131.4679
+2365
+</td>
+<td style="text-align:right;">
+720
+</td>
+<td style="text-align:right;">
+1520
 </td>
 </tr>
 <tr>
@@ -556,10 +478,16 @@ F
 M
 </td>
 <td style="text-align:right;">
-1318.228
+1443
 </td>
 <td style="text-align:right;">
-133.7163
+2050
+</td>
+<td style="text-align:right;">
+730
+</td>
+<td style="text-align:right;">
+1460
 </td>
 </tr>
 </tbody>
