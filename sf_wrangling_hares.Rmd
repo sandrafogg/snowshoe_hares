@@ -46,7 +46,6 @@ snowshoe_clean_df <- snowshoe_df %>%
         -grid_l) %>% 
   na.omit()
 
-snowshoe_clean_df
 ```
 
 
@@ -73,7 +72,7 @@ summary_table
 ```
 
 Visualize the Data
-```{r}
+```{r, warning = FALSE, message = FALSE}
 # Create a Graph of the Data
 labels <- c(F = "Female", M = "Male")
 
@@ -87,6 +86,7 @@ snowshoe_graph <- ggplot(snowshoe_clean_df, aes(x = snowshoe_clean_df$weight, co
   theme_classic() +
   theme(legend.position = "none") +
   labs(title="Adult Snowshoe Hare Weight Distribution (1999-2012)",x=" Weight (g)", y = "Number of Individuals", legend.title= "Sex")
+
 snowshoe_graph
                          
 ```
