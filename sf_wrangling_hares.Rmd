@@ -1,0 +1,79 @@
+---
+title: "data_wrangling"
+author: "Sandra Fogg"
+date: "1/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load Required Packages
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(knitr)
+library(ggplot2)
+
+```
+
+Clean the Data
+```{r}
+# Read in Data
+snowshoe_df <- read_csv("showshoe_lter.csv")
+snowshoe_df
+
+# Select Sex, Weight, Hindfoot Ratio, and Grid 
+# Filter Information from Grid "bonmat", as Adequate Mtadata for the Site is Unavailable
+# Remove Rows Containing Questionable Sex
+# Convert Grid and Sex Data to Lowercase
+# Remove NAs from the Dataframe
+snowshoe_clean_df <- snowshoe_df %>% 
+  select(grid, sex, weight, hindft) %>% 
+  filter(grid != "bonmat",
+         sex != "?",
+         sex != "M?",
+         sex != "F?",
+         sex != "m?",
+         sex != "f?",
+         sex != "pf") %>%
+    mutate(grid_l = str_to_lower(grid),
+           sex_l = str_to_lower(sex)) %>% 
+  select(-grid,
+        -sex,
+        -grid_l) %>% 
+  na.omit()
+
+
+snowshoe_clean_df
+```
+
+
+Summarize the Data
+```{r}
+# Summarize the 
+
+# Create a Summary Table of Mean Weight and Hind Foot Ratio for Each Sex
+mean_table <- snowshoe_clean_df %>% 
+  group_by(sex_l) %>% 
+  summarise(mean_wt = mean(weight),
+            mean_hf = mean(hindft))
+mean_table 
+
+summary_table <- kable(mean_table) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = FALSE) %>% 
+  col.names(c("Sex", "Weight", "Hind Foot Ratio")) %>% 
+  add_header_above(c("", "Average Snowshoe Hare Weight and Hind Foot Ratio in the Bonanza Creek Experimental Forest" = 2))
+summary_table
+```
+
+Visualize the Data
+```{r}
+# Create a Graph of the Data
+snowshoe_graph <- ggplot(snowshoe_clean_df,
+                         
+```
+
