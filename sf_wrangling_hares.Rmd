@@ -40,7 +40,7 @@ snowshoe_clean_df <- snowshoe_df %>%
          sex != "f?",
          sex != "pf") %>%
     mutate(grid_l = str_to_lower(grid),
-           sex_l = str_to_lower(sex)) %>% 
+           sex_l = str_to_upper(sex)) %>% 
   select(-grid,
         -sex,
         -grid_l) %>% 
@@ -58,14 +58,16 @@ Summarize the Data
 # Create a Summary Table of Mean Weight and Hind Foot Ratio for Each Sex
 mean_table <- snowshoe_clean_df %>% 
   group_by(sex_l) %>% 
-  summarise(mean_wt = mean(weight),
-            mean_hf = mean(hindft))
+  summarise(mean_wt = round(mean(weight), 2),
+            mean_hf = round(mean(hindft), 2))
+
+names(mean_table) <- c("Sex", "Mean Weight (g)", "Hindfoot Ratio") 
+
 mean_table 
 
 summary_table <- kable(mean_table) %>% 
   kable_styling(bootstrap_options = "striped", 
                 full_width = FALSE) %>% 
-  col.names(c("Sex", "Weight", "Hind Foot Ratio")) %>% 
   add_header_above(c("", "Average Snowshoe Hare Weight and Hind Foot Ratio in the Bonanza Creek Experimental Forest" = 2))
 summary_table
 ```
@@ -73,7 +75,8 @@ summary_table
 Visualize the Data
 ```{r}
 # Create a Graph of the Data
-snowshoe_graph <- ggplot(snowshoe_clean_df,
+snowshoe_graph <- ggplot(snowshoe_clean_df) +
+  geom_point()
                          
 ```
 
