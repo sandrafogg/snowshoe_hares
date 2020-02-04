@@ -48,6 +48,10 @@ snowshoe_clean_df <- snowshoe_df %>%
 
 ```
 
+Study Area
+![Study Area](GitHub/snowshoes_hares/map1.png)
+
+
 
 Summarize the Data
 ```{r, warning = FALSE, message = FALSE}
