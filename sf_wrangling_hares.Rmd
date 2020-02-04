@@ -25,7 +25,7 @@ Clean the Data
 snowshoe_df <- read_csv("showshoe_lter.csv")
 
 # Select Sex, Weight, Hindfoot Ratio, and Grid 
-# Filter Information from Grid "bonmat", as Adequate Mtadata for the Site is Unavailable
+# Filter Information from Grid "bonmat", as Adequate Metadata for the Site is Unavailable
 # Remove Rows Containing Questionable Sex
 # Convert Grid and Sex Data to Lowercase
 # Remove NAs from the Dataframe
@@ -90,4 +90,12 @@ snowshoe_graph <- ggplot(snowshoe_clean_df, aes(x = snowshoe_clean_df$weight, co
 snowshoe_graph
                          
 ```
+A useful descriptive introductory summary (3 - 4 sentences) of what’s contained in the project
+mage(s), with captions and necessary citation(s), of showshoe hares and/or a map of the study area
+All of your organized and well-annotated code (with warnings/messages hidden) used to create at least:
+
+One finalized graph about the Bonanza Creek snowshoe hare population (you pick which variables, how you want to wrangle it beforehand, and which type of visual to create - but make sure it is beautifully finalized)
+One finalized HTML table (probably created using kable & kableExtra) containing summary statistics about the snowshoe hares (again, you pick which variables, and how you want to group/summarize them)
+
+Make sure that both your figure and table appear in your final knitted document, each with a useful caption. Include text associated with each to help the audience understand and interpret the results. 
 
