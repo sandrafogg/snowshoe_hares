@@ -2,7 +2,9 @@
 title: "Snowshoe Hare & World Climate Analyses"
 author: "Sandra Fogg"
 date: "1/26/2020"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 fig_caption: yes
 ---
 ## Snowshoe Hares
@@ -124,4 +126,6 @@ snowshoe_graph
 <br>
 When intepreting the graph, it is apparent that in general the females are heavier than male hares in the same region.  However, it must be noted, that there are more females than males within the entire study. 
 
+</pagebreak>
 
+## World Climate PCA

@@ -1,5 +1,5 @@
 ---
-title: "PCA_Analysis"
+title: "World Climate PCA"
 author: "Sandra Fogg"
 date: "1/27/2020"
 output: html_document
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, include = FALSE}
 # Load Required Packages
 library(tidyverse)
 library(janitor)
@@ -18,9 +18,11 @@ library(VIM)
 library(skimr)
 library(ggfortify)
 ```
+World climatic and environmental variables were obtained from Google Earth Engine and compiled by Zander Venter on Kaggle. Mean values for each country included measurements of rainfall levels, temperature extremes, weather conditions, and topography. Principle components analysis (PCA) is utilized below to better understand patterns of climatic variation across the globe. 
 
-Clean the Data
-```{r}
+### Data Processing
+```{r, warning = FALSE, message = FALSE}
+## Clean the Data
 # Read in the Data
 world_climate_df <- read_csv("world_env_vars.csv") 
 
@@ -38,152 +40,46 @@ climate_clean_df <- world_climate_df %>%
   clean_names(case = "snake") %>% 
   mutate(country_l = make_clean_names(country, case = "snake")) %>% 
   select(-country)
-
-# Finalized
-
-
-climate_clean_df
 ```
 
+### Running PCA
+```{r, warning = FALSE, message = FALSE}
+##Select Indicator Variables
+climate_subset <- climate_clean_df %>% 
+  select(rain_mean_annual:cropland_cover)
 
-
-3. PCA for pollution burden indicator variables
-
-First, starting with ca_pb_nopct:
-
-**Note**: The pollution burden and population characteristic variables are aggregates (averages) of existing variables in the data frame, so we won't include those. That means we'll include columns:
-
-- From `ozone:solid_waste`, and
-- Frome `asthma:housing_burden`
-
-First, just selecting those:
-```{r}
-ca_pb_subset <- ca_pb_nopct %>% 
-  select(ozone:solid_waste, asthma:housing_burden)
 ```
 
-We'll use the `prcomp` function:
-- ?prcomp
-
-```{r, eval = FALSE}
-pb_pca <- prcomp(ca_pb_subset, scale = TRUE) # hmmm an error 
+```{r, warning = FALSE, message = FALSE, include = FALSE}
+## Summarize the Subset
+summary(climate_subset) 
 ```
 
-Look at the NA situation:
-```{r}
-summary(ca_pb_subset) # Max NAs in a variable: 242 (/8035)
+```{r, warning = FALSE, message = FALSE}
+## Run PCA Using `procomp`
+climate_pca <- prcomp(climate_subset, scale = TRUE) 
 ```
 
-A little aside: the `naniar` package for exploring missingness!
-See: https://naniar.njtierney.com/
+## Results
+```{r, warning = FALSE, message = FALSE}
+# Plot the Variances
+plot(climate_pca)
 
-Use `naniar::gg_miss_var()` to plot the number of missings by variable:
-```{r}
-# Plot number of missings by variable
-gg_miss_var(ca_pb_subset)
-```
-
-We can also explore NAs visually in other ways using the `VIM` package.
-
-The `VIM::matrixplot()` function creates a heatmap, where values are shown on a continuous grayscale, and missings are in red:
-```{r}
-matrixplot(ca_pb_subset)
-# We can also sort by a variable of interest. Let's say we want to sort by poverty:
-matrixplot(ca_pb_subset, sortby = "poverty")
-```
-
-Let's say our conclusion is that there are missings, but not many (compared to the actual scope of the data). We'll only keep our complete cases (census tracts without any missings).
-
-Use `tidyr::drop_na()` with no variables specified to keep complete cases across all variables:
-
-```{r}
-ca_pb_nona <- ca_pb_subset %>% 
-  drop_na()
-# Now check for NAs:
-summary(ca_pb_nona)
-# Or use `skimr::skim()`!
-skim(ca_pb_nona)
-```
-
-Cool. No NAs, checked out missingness, NOW let's try PCA again: 
-
-```{r}
-my_ca_pca <- prcomp(ca_pb_nona, scale = TRUE)
-# A nightmare! But what are we looking at? 
-plot(my_ca_pca)
-biplot(my_ca_pca)
-# Hmmm let's try something else (this requires ggfortify): 
-my_biplot <- autoplot(my_ca_pca, 
-                      colour = NA,
-                      loadings.label = TRUE,
-                      loadings.label.size = 3,
-                      loadings.label.colour = "black",
-                      loadings.label.repel = TRUE) +
-  theme_minimal()
-  
-my_biplot
-```
-
-4. Join data by census tract (inner join)
-
-```{r}
-ca_df <- ca_dem_clean %>% 
-  inner_join(ca_pb_nopct, by = c("census_tract_number" = "census_tract"))
-```
-
-Check it out, then get complete cases:
-```{r}
-ca_df_nona <- ca_df %>% 
-  drop_na()
-```
-
-5. Make a new subset for PCA, that includes % white and elderly, and some interesting pollution burden & health indicators:
-
-Like (you can choose a different set): 
-
-- white_percent
-- elderly_65_percent
-- pm2_5
-- pesticides
-- traffic
-- asthma
-- cardiovascular_disease
-- poverty
-
-Make our subset:
-```{r}
-my_sub <- ca_df_nona %>% 
-  select(white_percent, elderly_65_percent, pm2_5, pesticides, traffic, asthma, cardiovascular_disease, poverty)
-```
-
-Then run PCA: 
-```{r}
-my_dem_pca <- prcomp(my_sub, scale = TRUE)
-biplot(my_dem_pca) # Noooo. We need better
-```
-
-Check it out a bit: 
-```{r}
-# Proportion of variance (& cumulative variance) explained by each PC
-summary(my_dem_pca)
-# Rotations (linear combinations for each PC):
-my_dem_pca
-```
-
-Make a sweet biplot:
-```{r}
-my_dem_biplot <- autoplot(my_dem_pca, 
-                      colour = NA,
-                      loadings.label = TRUE,
-                      loadings.label.size = 3,
-                      loadings.label.colour = "black",
-                      loadings.label.repel = TRUE) +
+# Clean the biplot
+clean_biplot <- autoplot(climate_pca,
+                         colour = NA,
+                       loadings.label.size = 3,
+                       loadings.label.colour = "black",
+                       loadings.label.repel = TRUE,
+                       loadings.label = TRUE) +
   theme_minimal() +
-  scale_y_continuous(limits = c(-0.05, 0.05))
-my_dem_biplot
-  
+  labs(title = "Principle Components Analysis of Worldwide Climate Data", vars) 
+
+clean_biplot
 ```
 
 What are a few main things we can take out of this? What are the main correlations you notice? Are they in line with what you would expect, or is anything surprising? 
 
-### End PCA section
+
+A summary (bulletpoints are fine) pointing out some major takeaways from your PCA that can be gleaned from the biplot
+You are also welcome to include a photo in the HTML to add some visual interest (not required for Task 2).
